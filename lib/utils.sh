@@ -23,17 +23,40 @@ asdf_repository_url() {
   echo "https://github.com/asdf-vm/asdf-plugins.git"
 }
 
+get_install_type(){
+  local install_type
+  install_type=$(get_asdf_config_value "install_type")
+
+  echo "$install_type"
+}
+
+get_base_install_path(){
+  local install_dir
+
+  if [ "$(get_install_type)" = "user" ]; then
+    install_dir="$HOME/.asdf/installs"
+  else
+    install_dir="$(asdf_dir)/installs"
+  fi
+
+  echo "$install_dir"
+}
+
 get_install_path() {
   local plugin=$1
   local install_type=$2
   local version=$3
-  mkdir -p "$(asdf_dir)/installs/${plugin}"
+
+  local install_dir
+  install_dir="$(get_base_install_path)"
+
+  mkdir -p "${install_dir}/${plugin}"
 
   if [ "$install_type" = "version" ]
   then
-    echo "$(asdf_dir)/installs/${plugin}/${version}"
+    echo "${install_dir}/${plugin}/${version}"
   else
-    echo "$(asdf_dir)/installs/${plugin}/${install_type}-${version}"
+    echo "${install_dir}/${plugin}/${install_type}-${version}"
   fi
 }
 

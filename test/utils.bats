@@ -124,6 +124,14 @@ teardown() {
   [ "$output" = "0.1.0|$HOME/.tool-versions" ]
 }
 
+@test "get_base_install_path should return user dir if configured" {
+  echo "install_type = user" > $HOME/.asdfrc
+
+  run get_base_install_path
+  [ "$status" -eq 0 ]
+  [ "$output" = "$HOME/.asdf/installs" ]
+}
+
 @test "find_version should return \$ASDF_DEFAULT_TOOL_VERSIONS_FILENAME if set" {
   ASDF_DEFAULT_TOOL_VERSIONS_FILENAME="$PROJECT_DIR/global-tool-versions"
   echo "dummy 0.1.0" > $ASDF_DEFAULT_TOOL_VERSIONS_FILENAME
